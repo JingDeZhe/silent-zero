@@ -1,8 +1,9 @@
-import { px } from './utils'
+import { Painter } from './utils/painter'
 
 export class Game {
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
+  painter: Painter
   isRunning = false
   lastTime = 0
   deltaTime = 0
@@ -10,14 +11,20 @@ export class Game {
   h = 300
 
   constructor(canvas: HTMLCanvasElement) {
-    canvas.setAttribute('width', px(this.w))
-    canvas.setAttribute('height', px(this.h))
     this.canvas = canvas
     this.ctx = canvas.getContext('2d')!
+    this.painter = new Painter(this.ctx)
     this.init()
   }
 
+  setSize(w: number, h: number) {
+    this.w = w
+    this.h = h
+    this.painter.setSize(w, h)
+  }
+
   private init() {
+    this.setSize(this.w, this.h)
     this.isRunning = true
     this.startGameLoop()
   }
@@ -39,9 +46,9 @@ export class Game {
   private update(delta: number) {}
 
   private render() {
-    this.ctx.fillStyle = '#fff'
-    this.ctx.fillRect(0, 0, this.w, this.h)
-    this.ctx.fillStyle = '#995775'
-    this.ctx.fillRect(10, 10, 30, 30)
+    this.painter.background('#fff')
+
+    this.painter.fill('#E06C75')
+    this.painter.addRect({ x: 10, y: 10, w: 50, h: 50 })
   }
 }
