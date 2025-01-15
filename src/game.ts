@@ -32,6 +32,14 @@ export class Game {
   private startGameLoop() {
     this.lastTime = performance.now()
     requestAnimationFrame((ts) => this.gameLoop(ts))
+    this.setup()
+  }
+
+  private setup() {
+    this.painter.background('#fff')
+
+    this.painter.fill('#E06C75')
+    this.painter.addRect({ x: 10, y: 10, w: 50, h: 50, fill: '#E06C75' })
   }
 
   private gameLoop(timestamp: number) {
@@ -39,16 +47,10 @@ export class Game {
 
     requestAnimationFrame((ts) => this.gameLoop(ts))
     const deltaTime = timestamp - this.lastTime
-    this.update(deltaTime)
-    this.render()
+    this.step(deltaTime)
   }
 
-  private update(delta: number) {}
-
-  private render() {
-    this.painter.background('#fff')
-
-    this.painter.fill('#E06C75')
-    this.painter.addRect({ x: 10, y: 10, w: 50, h: 50 })
+  private step(delta: number) {
+    this.painter.display()
   }
 }

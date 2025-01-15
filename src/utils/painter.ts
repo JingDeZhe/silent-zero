@@ -1,7 +1,9 @@
 import { color2hex } from './color'
+import { Rect, Shape } from './shape'
 
 export class Painter {
   ctx: C2D
+  shapes: Shape[] = []
 
   constructor(ctx: C2D) {
     this.ctx = ctx
@@ -35,48 +37,15 @@ export class Painter {
     this.pop()
   }
 
-  drawRect(x: number, y: number, w: number, h: number) {
-    this.ctx.fillRect(x, y, w, h)
-  }
-
   addRect(config: RectConfig) {
-    return new Rect(this, config)
-  }
-}
-
-class Rect {
-  painter: Painter
-  x = 0
-  y = 0
-  w = 0
-  h = 0
-  fill: ColorType = 0
-  stroke: ColorType = 'transparent'
-  constructor(painter: Painter, config: RectConfig) {
-    this.painter = painter
-    this.x = config.x
-    this.y = config.y
-    this.w = config.w
-    this.h = config.h
-    this.fill = config.fill || 0
-    this.stroke = config.stroke || 'transparent'
-  }
-
-  setPosition(x: number, y: number) {
-    this.x = x
-    this.y = y
-  }
-
-  setSize(w: number, h: number) {
-    this.w = w
-    this.h = h
+    const rect = new Rect(this, config)
+    this.shapes.push(rect)
+    return rect
   }
 
   display() {
-    this.painter.push()
-    this.painter.fill(this.fill)
-    this.painter.stroke(this.stroke)
-    this.painter.drawRect(this.x, this.y, this.w, this.h)
-    this.painter.pop()
+    for (const shape of this.shapes) {
+      shape.display()
+    }
   }
 }
